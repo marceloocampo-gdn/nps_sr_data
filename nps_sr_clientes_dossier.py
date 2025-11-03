@@ -26,33 +26,42 @@ pd.options.mode.chained_assignment = None
 ############################# VALIDA VIRTUAL O PC PERSONAL #################################
 ############################################################################################
 
+if os.getcwd() == 'c:\\Users\\marcelo.ocampo\\Desktop\\GDN\\Codes\\NPS\\nps_clientes\\nps_sr_clientes':
+    while True:
+        try:
 
-f = open('credentials.json')
-data_pass = json.load(f)
+            f = open('credentials.json')
+            data_pass = json.load(f)
 
-ctx = snowflake.connector.connect(
-    user = data_pass['snow']['USER'],
-    password = data_pass['snow']['PASS'],
-    account = data_pass['snow']['ACCOUNT'],
-    database = 'SANDBOX_PLUS',
-    schema = 'DWH'
-)
+            ctx = snowflake.connector.connect(
+                user = data_pass['snow']['USER'],
+                password = data_pass['snow']['PASS'],
+                account = data_pass['snow']['ACCOUNT'],
+                database = 'SANDBOX_PLUS',
+                schema = 'DWH'
+            )
 
-cursor = ctx.cursor()
+            cursor = ctx.cursor()
+
+            break
+
+        except:
+            print('Password Incorrecto')
+
+        print('Password correcto')
+else:
+    
 
 # Conexion VM a Snowflake
+    ctx = snowflake.connector.connect(
+        user="PLUS_VM1_NEW",
+        password="aK09fWyh4i5oVcI9A31Ea4vXMcquhMMlIE9sXRoil3oSw9faD9",
+        account="XZ23267-dp32414",
+        database="SANDBOX_PLUS",
+        schema="DWH"
+        )
 
-#else:
- #   pass
-    # ctx = snowflake.connector.connect(
-    #     user="PLUS_VM1_NEW",
-    #     password="aK09fWyh4i5oVcI9A31Ea4vXMcquhMMlIE9sXRoil3oSw9faD9",
-    #     account="XZ23267-dp32414",
-    #     database="SANDBOX_PLUS",
-    #     schema="DWH"
-    #     )
-
-    # cursor = ctx.cursor()
+    cursor = ctx.cursor()
 
 
 ############################################################################################
