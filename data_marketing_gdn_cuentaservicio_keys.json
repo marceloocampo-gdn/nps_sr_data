@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "silicon-dialect-474615-k3",
+  "private_key_id": "1871e5cc0bb6891a5ffd84f9fcdacb15c39cb468",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCTvzveW3MXDb01\n7XdJPZaYanSBSSEw1Skma08WJHZHa5/LXca4dzzzI6pKJnxhPhE//RJFRys4Tpdw\nkGfK5Siq0Xsv/OAHFSOVF6oFPckREnoTxPHppeGkvpkjn0g/VyM3O9ve7+9CMC+s\n0wnQ6i3pmSLPSKhWb0wX7vRLcbIep/7WiMuyxVAhWAQ8hbQwtTfjUbFbH6/yFzkk\n9YZ3ZlRA+6oGODaiTGeHC9BXQue+vwjX44ZVs5Zno9v7W0vfBeU6dR4hI6XXMya9\nEKOh830Z51L/lP8BNYEGNYC3ftBOqro6K05BDEMB4s/fdIq6ldDRp5vf3F1YfD2E\nBJknGU25AgMBAAECggEABL1pV8haSF6N9+lu3sAlkS01IKKueGkWQV/G8UBpNQBc\nZ4NSKT/WCjzWLTvP2LTLi+B8EhHm7o8C578SPV2dsOE4kQENVNzWP+W69CEXzr7n\ngLPcSPEj7Iua0Rw+jp2miRKYCq5q4BY4qVQ55+RjZa+egMTldaRrbgch+jujCb2w\ngilfWSG2msVYPibVYUWUQFN8hUIr24YnsmE68jP8Im3F5LlzE5IG+04N1Cbkr04P\nIcQRRhyw7Ojmi5zFNOXP8q3/s4vMjUik8luiGYTCbNLGf4zpMYOayJ5laYghbDtD\nExR7VDLFmw130k8qbpAB9rgwb040QL4zu9iXFxrNCwKBgQDD7VokkQY+UO1+Jtpj\n7Ch99YS6acoc6xSExJN7vIebxdiLYhp6x+3/Ez1bUUHBr606YQ4dpRPVm5J7l1ks\nFLBx7vg1woxTEBoxbRK6enzXspLib76hPQYy2qSFs7CK+jUqmZejtr5zF9WlGZvG\nYJgxRMHdxA1cEYheF+mlWn5kiwKBgQDBDCRNVV1zSOdTbtlVu/CwMx0pgQxh7zR6\nO2B68JMREl/HGJk49XKdIkiwDUh1e6ZM30d+ODU1bkXr3WzeYof/3hfcjaa2yxd4\nFQzkcqrTuSDGPbiwJV+rKt/wIErWLhUXCxwb8AWh6RGBP9oEIDkZhqtHdE+jGjYc\n57aCHNurSwKBgA9pRRTpP2d5cCTjI3yGn+zAei87kQVTTGrhF4S9IKGVH2JfVhvg\nTA0rU0EylAyLKAIWjkiwqm277frAvefkvLhJhsabxfPmqVjH7pgyeE1zI3CiP4lp\nRmqLnjNSHgnggnwWVsIu5q4g6tIwwHsLMA14DhPGjxJ14pccJGm4Q4bfAoGAPnG+\nAGHfk53+bceKd6gOaABwq2854SfuEqfIQpw1Bi2qW42CaqFCjL99Qa1aRd5UYcNL\nrfFijMD5zxzVzW2Tzlk54LbVOYWiNs6gV/kbdtcIWfe3GQtN0eFRhKv9aSCI4+ZN\nFmBigggRCHzt+a2uqqocF0XxSLH+1QTCzX2mNNcCgYA+lU7tKjlDVZr/AslwMv8j\nFSuEp9JoDd+mtbc23t+nFOOVqAeaAaWbfN6oYK47aSI+seoiLLkLq2BR6cp9Jdjx\nu3H2P/yJjLZ/tBIqF/sUeYDGq6VgsOgh/FxqhigOEqn/3HPXoQAuaTPQak5pvLpZ\neY9bMqv9y5TMd1D4U5J8Tg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "data-marketing-service@silicon-dialect-474615-k3.iam.gserviceaccount.com",
+  "client_id": "107773317524813483169",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/data-marketing-service%40silicon-dialect-474615-k3.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
