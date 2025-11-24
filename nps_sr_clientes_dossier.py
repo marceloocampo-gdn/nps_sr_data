@@ -63,6 +63,19 @@ else:
 
     cursor = ctx.cursor()
 
+# f = open('credentials.json')
+# data_pass = json.load(f)
+
+# ctx = snowflake.connector.connect(
+#     user = data_pass['snow']['USER'],
+#     password = data_pass['snow']['PASS'],
+#     account = data_pass['snow']['ACCOUNT'],
+#     database = 'SANDBOX_PLUS',
+#     schema = 'DWH'
+# )
+
+# cursor = ctx.cursor()
+
 
 ############################################################################################
 ################################## CUENTA DE SERVICIO ######################################
@@ -163,6 +176,32 @@ fis.rename(columns =
             'Si lo deseas puedes dejarnos algún comentario sobre tu experiencia de compra en San Roque.' : 'EXPERIENCIA2',
             'Submitted At': 'FECHA'}, inplace = True)
 
+url_sr_mail = 'https://docs.google.com/spreadsheets/d/1HWK_VzyJ5Ug2DtxUs3d3bd2KxO8c6rsWI_owwrr6D6Y/export?format=csv'
+
+mail = pd.read_csv(url_sr_mail)
+
+# La columna l trae tanto CLIE_CLIE_NDOC (primeras miles de filas) y luego empezo a traer SOCI_SOCI_ID
+mail.rename(columns =
+           {'doc': 'DOCUMENTO',
+           'local':'LOCAL_X',
+           '¿Recomendarías comprar en San Roque a familiares y amigos?':'RECOMENDAR',
+           '¿Querrías darnos 1 minuto mas y contarnos un poco de tu experiencia.':'CONTAR_EXPERIENCIA',
+           '¿Cómo calificarías tu experiencia de compra en San Roque?':'EXPERIENCIA',
+            '¿Cómo calificarías la atención recibida en San Roque?':'ATENCION',
+            '¿Qué es lo que más te gusta de San Roque?':'GUSTA',
+            '¿Qué podemos mejorar?':'MEJORAR',
+            '¿Encontraste todos los artículos que buscabas?':'ENCONTRASTE',
+            'Cuéntanos, ¿qué producto buscabas? ': 'BUSCABAS',
+            'Si lo deseas puedes dejarnos algún comentario sobre tu experiencia de compra en San Roque.' : 'EXPERIENCIA2',
+            'Submitted At': 'FECHA'}, inplace = True)
+
+mail['LOCAL_X'] = mail['LOCAL_X'].astype(int).astype(str).str.zfill(2)
+
+locales = pd.DataFrame(fis['LOCAL'].unique(), columns=['LOCAL'])
+locales['CODIGO_LOCAL'] = locales['LOCAL'].astype(str).str[:2]
+df_merge = locales.merge(mail, left_on='CODIGO_LOCAL', right_on='LOCAL_X', how='right')
+mail = df_merge.copy()[['DOCUMENTO' , 'LOCAL' , 'RECOMENDAR' , 'EXPERIENCIA' , 'ATENCION' , 'GUSTA' , 'MEJORAR' , 'ENCONTRASTE' , 'BUSCABAS' , 'EXPERIENCIA2' , 'FECHA']]
+
 fis['day'] =  list(map(lambda x: str(x).split('/')[0], fis['FECHA']))
 fis['month'] =  list(map(lambda x: str(x).split('/')[1], fis['FECHA']))
 fis['year'] = list(map(lambda x: str(x).split('/')[2].split(' ')[0], fis['FECHA']))
@@ -171,6 +210,14 @@ fis['DIA'] = pd.to_datetime(fis[['year', 'month', 'day']])
 fis['CANAL'] = 'QR'
 fis['REGIONAL'] = fis['LOCAL'].str[:2].map(regionales_dict_str)
 
+mail['day'] =  list(map(lambda x: str(x).split('/')[0], mail['FECHA']))
+mail['month'] =  list(map(lambda x: str(x).split('/')[1], mail['FECHA']))
+mail['year'] = list(map(lambda x: str(x).split('/')[2].split(' ')[0], mail['FECHA']))
+mail['PERIODO'] = pd.to_datetime(mail['year'] + '-' + mail['month']).dt.to_period('M')
+mail['DIA'] = pd.to_datetime(mail[['year', 'month', 'day']])
+mail['CANAL'] = 'MAIL'
+mail['REGIONAL'] = mail['LOCAL'].str[:2].map(regionales_dict_str)
+
 fis.drop(columns = ['Querrías darnos 1 minuto mas y contarnos un poco de tu experiencia.', 'month', 'year', 'day'], inplace = True)
 
 ############################################################################################
@@ -178,6 +225,7 @@ fis.drop(columns = ['Querrías darnos 1 minuto mas y contarnos un poco de tu exp
 ############################################################################################
 
 df = fis.copy()
+df_mail = mail.copy()
 
 df['NPS'] = np.nan
 df['NPS'][df['RECOMENDAR'].isin([9, 10])] = 'Promotores'
@@ -189,13 +237,40 @@ df['PROMOTOR'][df['NPS'] == 'Promotores'] = 1
 df['DETRACTOR'] = np.nan
 df['DETRACTOR'][df['NPS'] == 'Detractores'] = 1
 
+df_mail['NPS'] = np.nan
+df_mail['NPS'][df_mail['RECOMENDAR'].isin([9, 10])] = 'Promotores'
+df_mail['NPS'][df_mail['RECOMENDAR'].isin([7, 8])] = 'Neutros'
+df_mail['NPS'][df_mail['RECOMENDAR'].isin([0, 1, 2, 3, 4, 5, 6])] = 'Detractores'
+df_mail = df_mail[~df_mail['NPS'].isna()]
+df_mail['PROMOTOR'] = np.nan
+df_mail['PROMOTOR'][df_mail['NPS'] == 'Promotores'] = 1
+df_mail['DETRACTOR'] = np.nan
+df_mail['DETRACTOR'][df_mail['NPS'] == 'Detractores'] = 1
+
+# ------------------------------------------------------#
+
 df_final = df
+df_final_mail = df_mail
+
+# ------------------------------------------------------#
 
 # Elimino puntos '.'
 df_final['GUSTA'] = list(map(lambda x: str(x).replace('.', ''), df_final['GUSTA']))
 # Elimino tildes
 df_final['GUSTA'] = list(map(lambda x : x.translate(x.maketrans("áéíóú","aeiou")), df_final['GUSTA'] ))
 df_final['GUSTA'] = list(map(lambda x: str(x).replace(', ', ','), df_final['GUSTA']))
+
+# Elimino puntos '.'
+df_final_mail['GUSTA'] = list(map(lambda x: str(x).replace('.', ''), df_final_mail['GUSTA']))
+# Elimino tildes
+df_final_mail['GUSTA'] = list(map(lambda x : x.translate(x.maketrans("áéíóú","aeiou")), df_final_mail['GUSTA'] ))
+df_final_mail['GUSTA'] = list(map(lambda x: str(x).replace(', ', ','), df_final_mail['GUSTA']))
+
+# ------------------------------------------------------#
+
+df_final = pd.concat([df_final, df_final_mail], ignore_index=True)
+
+# ------------------------------------------------------#
 
 gusta_aux = df_final[~df_final['GUSTA'].isna()]
 gusta_aux = gusta_aux[gusta_aux['GUSTA'] != 'nan']
