@@ -381,6 +381,9 @@ mejorar_final['DIA'] = mejorar_final['DIA'].astype(str)
 mejorar_final.rename(columns = {'Qué podemos mejorar?':'QUE PODEMOS MEJORAR', 'N° Respuestas':'N° RESPUESTAS'}, inplace = True)
 mejorar_final['QUE PODEMOS MEJORAR'] = mejorar_final['QUE PODEMOS MEJORAR'].apply(lambda x: str(x)[:250] if x is not None else None)
 
+col = 'QUE ES LO QUE MAS TE GUSTA'
+
+gusta_final[col] = gusta_final[col].apply(lambda x: x[:200] if isinstance(x, str) else x)
 
 ############################################################################################
 ######################################## CARGA SNOW ########################################
