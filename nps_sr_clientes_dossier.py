@@ -362,6 +362,10 @@ general['ENCONTRASTE TODO LO QUE BUSCABAS'].fillna('Sin Info', inplace = True)
 
 general["DIA"] = pd.to_datetime(general["DIA"], unit="us", origin="unix").dt.date
 
+col = 'SI LO DESEAS PUEDES DEJARNOS ALGÚN COMENTARIO SOBRE TU EXPERIENCIA DE COMPRA EN SAN ROQUE'
+
+general[col] = general[col].apply(lambda x: x[:1000] if isinstance(x, str) else x)
+
 ############################################################################################
 ############################### FORMATOS GUSTA Y MEJORAR ###################################
 ############################################################################################
