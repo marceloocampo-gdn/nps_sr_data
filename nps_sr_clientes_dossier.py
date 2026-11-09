@@ -2,6 +2,7 @@
 ##################################### IMPORTACIONES ########################################
 ############################################################################################
 
+from fastapi import requests
 import pandas as pd
 import numpy as np
 import snowflake.connector
@@ -26,55 +27,20 @@ pd.options.mode.chained_assignment = None
 ############################# VALIDA VIRTUAL O PC PERSONAL #################################
 ############################################################################################
 
-if os.getcwd() == 'c:\\Users\\marcelo.ocampo\\Desktop\\GDN\\Codes\\NPS\\nps_clientes\\nps_sr_clientes':
-    while True:
-        try:
 
-            f = open('credentials.json')
-            data_pass = json.load(f)
 
-            ctx = snowflake.connector.connect(
-                user = data_pass['snow']['USER'],
-                password = data_pass['snow']['PASS'],
-                account = data_pass['snow']['ACCOUNT'],
-                database = 'SANDBOX_PLUS',
-                schema = 'DWH'
-            )
+f = open('credentials.json')
+data_pass = json.load(f)
 
-            cursor = ctx.cursor()
+ctx = snowflake.connector.connect(
+     user = data_pass['snow']['USER'],
+     password = data_pass['snow']['PASS'],
+     account = data_pass['snow']['ACCOUNT'],
+     database = 'SANDBOX_PLUS',
+     schema = 'DWH'
+ )
 
-            break
-
-        except:
-            print('Password Incorrecto')
-
-        print('Password correcto')
-else:
-    
-
-# Conexion VM a Snowflake
-    ctx = snowflake.connector.connect(
-        user="PLUS_VM1_NEW",
-        password="aK09fWyh4i5oVcI9A31Ea4vXMcquhMMlIE9sXRoil3oSw9faD9",
-        account="XZ23267-dp32414",
-        database="SANDBOX_PLUS",
-        schema="DWH"
-        )
-
-    cursor = ctx.cursor()
-
-# f = open('credentials.json')
-# data_pass = json.load(f)
-
-# ctx = snowflake.connector.connect(
-#     user = data_pass['snow']['USER'],
-#     password = data_pass['snow']['PASS'],
-#     account = data_pass['snow']['ACCOUNT'],
-#     database = 'SANDBOX_PLUS',
-#     schema = 'DWH'
-# )
-
-# cursor = ctx.cursor()
+cursor = ctx.cursor()
 
 
 ############################################################################################
@@ -158,7 +124,11 @@ regionales_dict_str = {str(key): value for key, value in regionales_dict.items()
 ############################### DRIVE INICIAL - CONSUMO ####################################
 ############################################################################################
 
-url_sr = 'https://docs.google.com/spreadsheets/d/1iGjKfVEnFADr7FW58fxUkTEtL5vpmZTy7mRrlpG6CQs/export?format=csv'
+file_id = '1iGjKfVEnFADr7FW58fxUkTEtL5vpmZTy7mRrlpG6CQs'
+hoja = 'Satisfacción de usuario San Roque QR'
+
+url_sr = f'https://docs.google.com/spreadsheets/d/{file_id}/gviz/tq?tqx=out:csv&sheet={requests.utils.quote(hoja)}'
+
 fis = pd.read_csv(url_sr)
 
 # La columna l trae tanto CLIE_CLIE_NDOC (primeras miles de filas) y luego empezo a traer SOCI_SOCI_ID
@@ -176,7 +146,10 @@ fis.rename(columns =
             'Si lo deseas puedes dejarnos algún comentario sobre tu experiencia de compra en San Roque.' : 'EXPERIENCIA2',
             'Submitted At': 'FECHA'}, inplace = True)
 
-url_sr_mail = 'https://docs.google.com/spreadsheets/d/1HWK_VzyJ5Ug2DtxUs3d3bd2KxO8c6rsWI_owwrr6D6Y/export?format=csv'
+file_id_mail = '1HWK_VzyJ5Ug2DtxUs3d3bd2KxO8c6rsWI_owwrr6D6Y'
+hoja = 'Satisfacción de usuario San Roque Mail'
+
+url_sr_mail = f'https://docs.google.com/spreadsheets/d/{file_id_mail}/gviz/tq?tqx=out:csv&sheet={requests.utils.quote(hoja)}'
 
 mail = pd.read_csv(url_sr_mail)
 
@@ -195,7 +168,12 @@ mail.rename(columns =
             'Si lo deseas puedes dejarnos algún comentario sobre tu experiencia de compra en San Roque.' : 'EXPERIENCIA2',
             'Submitted At': 'FECHA'}, inplace = True)
 
-mail['LOCAL_X'] = mail['LOCAL_X'].astype(int).astype(str).str.zfill(2)
+mail['LOCAL_X'] = (
+    pd.to_numeric(mail['LOCAL_X'], errors='coerce')
+      .fillna(0)
+      .astype(int)
+      .astype(str)
+      .str.zfill(2)
 
 locales = pd.DataFrame(fis['LOCAL'].unique(), columns=['LOCAL'])
 locales['CODIGO_LOCAL'] = locales['LOCAL'].astype(str).str[:2]
