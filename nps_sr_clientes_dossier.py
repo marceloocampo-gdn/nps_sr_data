@@ -173,7 +173,7 @@ mail['LOCAL_X'] = (
       .fillna(0)
       .astype(int)
       .astype(str)
-      .str.zfill(2)
+      .str.zfill(2))
 
 locales = pd.DataFrame(fis['LOCAL'].unique(), columns=['LOCAL'])
 locales['CODIGO_LOCAL'] = locales['LOCAL'].astype(str).str[:2]
